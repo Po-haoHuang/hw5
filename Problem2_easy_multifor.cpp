@@ -16,21 +16,21 @@ int *flag,*loclist;
 
 int deviation(int * f,int _n,int _k){
 	int a=0;
-	for(int i=0;i<k;i++){
-		if(i==0){
+	for(int i=1;i<k+1;i++){
+		/*if(i==0){
 			for(int j=0;j<=flag[i];j++)
 				a = a + abs(loclist[(int)floor(flag[i]/2)]-loclist[j]);
 
-		}
-		else if(i!=(k-1)){
-			for(int j=flag[i-1]+1;j<=flag[i];j++)
-				a = a + abs(loclist[(int)floor((flag[i-1]+1+flag[i])/2)]-loclist[j]);
-		}
-		else{
+		}*/
+		//else if(i!=(k-1)){
+		for(int j=flag[i-1]+1;j<=flag[i];j++)
+			a = a + abs(loclist[(int)floor((flag[i-1]+1+flag[i])/2)]-loclist[j]);
+		//}
+		/*else{
 			for(int j=flag[i-1]+1;j<=n-1;j++)
 				a = a + abs(loclist[(int)floor((flag[i-1]+n)/2)]-loclist[j]);
 
-		}
+		}*/
 
 	}
 	return a;
@@ -56,14 +56,16 @@ void readin(){
 			flag[i] = n-1;
   		else
 			//flag[i]=(int)floor((i)*n/k)-1;
-		flag[i]=i;
+		flag[i]=i-1;
 		//cout<<flag[i];
 	}
 	ans=deviation(flag,n,k);
+	for(int i=0;i<k+1;i++)
+	cout<<flag[i]<<endl;
 	while(1){
 		stop=0;
-		for(int i=0;i<k-1;i++){
-			if(i!=k-2){
+		for(int i=1;i<k;i++){
+			//if(i!=k-2){
 				if((flag[i+1]-flag[i])>1){
 
 				record=flag[i];
@@ -82,8 +84,8 @@ void readin(){
 					}
 				}
 			}
-			}
-			else{
+			//}
+			/*else{
 				if((n-flag[i])>1){
 				record=flag[i];
 				for(int k=flag[i]+1;k<n;k++){
@@ -98,12 +100,13 @@ void readin(){
 					flag[i]=record;
 				}
 			}
-			}
+			}*/
 		}
 		if(stop==0)
 			break;
 	}
-
+	for(int i=0;i<k+1;i++)
+	cout<<flag[i]<<endl;
 	cout<<ans;
 
 
