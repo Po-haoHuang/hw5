@@ -10,16 +10,15 @@ using namespace std;
 
 
 int n,k;
-int *flag,*loclist;
+int **memo,*loclist;
 
 
 
-int deviation(int * f,int _n,int _k){
-	int a=0;
-	for(int i=1;i<k+1;i++){
-		for(int j=flag[i-1]+1;j<=flag[i];j++)
-			a = a + abs(loclist[(int)floor((flag[i-1]+1+flag[i])/2)]-loclist[j]);
-	}
+int mcost(int _h,int _t){
+	int a=0,b=(int)floor((_h+_t)/2);
+	for(int i=_h;i<=_t;i++)
+		a = a + abs(loclist[b]-loclist[i]);
+
 	return a;
 	
 }
@@ -28,52 +27,52 @@ void readin(){
 	int ans=0,stop=0,temp,record;
 	scanf("%d%d",&n,&k);
 	loclist = (int*)malloc(sizeof(int)*n);
-	flag = (int*)malloc(sizeof(int)*(k-1));
+	//flag = (int*)malloc(sizeof(int)*(k+1));
 	for(int i=0;i<n;i++){
 		scanf("%d",&loclist[i]);
   	}
-
-
-
-	for(int i=0;i<k+1;i++){
-		if(i==k)
-			flag[i] = n-1;
-  		else
-			flag[i]=i-1;
-
+  	if(n==k){
+  		cout<<0;
+  		return;
 	}
-	ans=deviation(flag,n,k);
-	/*for(int i=0;i<k+1;i++)
-	cout<<flag[i]<<endl;*/
-	while(1){
-		stop=0;
-		for(int i=1;i<k;i++){
-				if((flag[i+1]-flag[i])>1){
-
-				record=flag[i];
-				for(int k=flag[i]+1;k<flag[i+1];k++){
-					flag[i]=k;
-					temp = deviation(flag,n,k);
-
-
-					if(temp<= ans){
-						ans=temp;
-						stop=1;
-						i=0;
-					}
-					else{
-					flag[i]=record;
-					}
-				}
+  	memo=(int**)calloc(n,sizeof(int*));
+  	for(int i=0;i<n;i++)
+		memo[i]=(int*)calloc(k,sizeof(int));
+		
+		
+		
+	for(int i=1;i<n;i++){
+		for(int j=min(i-1,k-1);j>=0;j--){
+			//cout<<i+1<<","<<j+1<<endl;
+			if(j==0){
+				memo[i][j]=mcost(0,i);
+				//cout<<memo[i][j]<<endl;
+				continue;
 			}
+			for(int l=i-1;l>=j-1;l--){
+			//cout<<"\t"<<l+1<<","<<j<<"\t"<<i-l<<","<<1<<endl;
+				if(l==(i-1)){
+					temp = memo[l][j-1]+0;
+				}
+				else if(l==(j-1)){
+					if(mcost(l+1,i)<temp)
+						temp=mcost(l+1,i);
 
+				}
+				else{
+					if((memo[l][j-1]+mcost(l+1,i))<temp)
+						temp=memo[l][j-1]+mcost(l+1,i);
+      				}
+			}
+			memo[i][j]=temp;
+			//cout<<memo[i][j]<<endl;
+			if(j==(k-1)&&i==(n-1)){
+
+				cout<<memo[i][j];
+				return;
+			}
 		}
-		if(stop==0)
-			break;
 	}
-	/*for(int i=0;i<k+1;i++)
-	cout<<flag[i]<<endl;*/
-	cout<<ans;
 
 
 
